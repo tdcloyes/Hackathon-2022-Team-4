@@ -1,36 +1,50 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect } from 'react';
+import React, { useState } from "react";
+import BarcodeScanner from "./BarcodeScanner.js";
 
 function App() {
 
+    const [data, setData] = useState("");
+    const [error, setError] = useState("");
+    const [emissions, setEmissions] = useState("");
+    const [isScannerOpen, setIsScannerOpen] = useState(false);
+
     useEffect(() => {
 
-        fetch('http://localhost:4000/api/emissions')
+        fetch('http://localhost:4000/api/emissions' + data)
             .then(response => response.json())
-            .then(data => console.log(data));;
+            .then(data => setEmissions());;
 
         console.log('text')
 
-    }, []);
+    }, data);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+          {isScannerOpen ?
+              <button onClick={() => setIsScannerOpen(false)}>{'Close Scanner'}</button> :
+              <button onClick={() => setIsScannerOpen(true)}>{'Open Scanner'}</button>
+          }
+          {isScannerOpen &&
+              <BarcodeScanner
+                  onScan={(result) => {
+                      setData(result.text);
+                      setIsScannerOpen(false);
+                  }}
+                  onError={(error) => {
+                      setError(error);
+                      setIsScannerOpen(false);
+                  }}
+              />
+          }
+          {data && (
+              <p>{`Barcode Data: ${data}`}</p>
+          )}
+          {error && (
+              <p>{`Error ${error}`}</p>
+          )}
+      </>
   );
 }
 
