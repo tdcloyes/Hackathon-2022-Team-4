@@ -4,7 +4,15 @@ import { useEffect } from 'react';
 
 function App() {
 
-    useEffect(() => {console.log('text')},[]);
+    useEffect(() => {
+
+        fetch('http://localhost:4000/api/healthz')
+            .then(response => response.json())
+            .then(data => console.log(data));;
+
+        console.log('text')
+
+    }, []);
 
   return (
     <div className="App">
