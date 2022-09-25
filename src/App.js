@@ -1,51 +1,44 @@
-import './App.css';
-import { useEffect } from 'react';
 import React, { useState } from "react";
-import BarcodeScanner from "./BarcodeScanner.js";
 
 function App() {
+    const [data, setData] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+    const [result, setResult] = useState([]);
 
-    const [data, setData] = useState("");
-    const [error, setError] = useState("");
-    const [emissions, setEmissions] = useState("");
-    const [isScannerOpen, setIsScannerOpen] = useState(false);
+    const handleSubmit = () => {
 
-    useEffect(() => {
-
-        fetch('http://localhost:4000/api/emissions' + data)
+        fetch('http://localhost:4000/api/emissions?barcode=' + data)
             .then(response => response.json())
-            .then(data => setEmissions());;
+            .then(i => setResult(i))
 
-        console.log('text')
+        setSubmitted(true);
+    
+    };
 
-    }, data);
+    return (
+        <>
+            <label>
+                Barcode: 
+                <input type="text" name="barcode" onChange={(e) => setData(e.target.value)}/>
+            </label>
 
-  return (
-      <>
-          {isScannerOpen ?
-              <button onClick={() => setIsScannerOpen(false)}>{'Close Scanner'}</button> :
-              <button onClick={() => setIsScannerOpen(true)}>{'Open Scanner'}</button>
-          }
-          {isScannerOpen &&
-              <BarcodeScanner
-                  onScan={(result) => {
-                      setData(result.text);
-                      setIsScannerOpen(false);
-                  }}
-                  onError={(error) => {
-                      setError(error);
-                      setIsScannerOpen(false);
-                  }}
-              />
-          }
-          {data && (
-              <p>{`Barcode Data: ${data}`}</p>
-          )}
-          {error && (
-              <p>{`Error ${error}`}</p>
-          )}
-      </>
-  );
+            <button name="submit" onClick={handleSubmit}>
+                Submit
+            </button>
+
+            {
+                submitted && 
+                <p>
+                    {"PRODUCT" + result[0].PRODUCT + '\n'}
+                    {"COMPANY" + result[0].COMPANY + '\n'}
+                    {"EMISSIONS" + result[0].EMISSIONS + 'MIL. METRIC TONS/YEAR' + '\n'}
+                    {"EMISSION CATEGORY" + result[0].'EMISSIONS CATEGORY' + '\n'}
+                </p>
+            }
+
+        </>
+    )
+
 }
 
 export default App;

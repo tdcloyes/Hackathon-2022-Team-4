@@ -1,0 +1,9 @@
+useEffect(() => {
+
+        fetch('http://localhost:4000/api/emissions?barcode=' + data)
+            .then(response => response.json())
+            .then(data => setEmissions(data));
+
+        console.log('text')
+
+    }, data);
