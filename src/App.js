@@ -3,7 +3,7 @@ import React, { useState } from "react";
 function App() {
     const [data, setData] = useState('');
     const [submitted, setSubmitted] = useState(false);
-    const [result, setResult] = useState([]);
+    const [result, setResult] = useState(['','']);
 
     const handleSubmit = () => {
 
@@ -11,15 +11,17 @@ function App() {
             .then(response => response.json())
             .then(i => setResult(i))
 
+        console.log(result);
+
         setSubmitted(true);
-    
+
     };
 
     return (
         <>
             <label>
-                Barcode: 
-                <input type="text" name="barcode" onChange={(e) => setData(e.target.value)}/>
+                Barcode:
+                <input type="text" name="barcode" onChange={(e) => setData(e.target.value)} />
             </label>
 
             <button name="submit" onClick={handleSubmit}>
@@ -27,15 +29,13 @@ function App() {
             </button>
 
             {
-                submitted && 
-                <p>
-                    {"PRODUCT" + result[0].PRODUCT + '\n'}
-                    {"COMPANY" + result[0].COMPANY + '\n'}
-                    {"EMISSIONS" + result[0].EMISSIONS + 'MIL. METRIC TONS/YEAR' + '\n'}
-                    {"EMISSION CATEGORY" + result[0].'EMISSIONS CATEGORY' + '\n'}
-                </p>
+                <>
+                    <p> PRODUCT: {result[0].PRODUCT} </p>
+                    <p> COMPANY: {result[0].COMPANY} </p>
+                    <p> EMISSIONS FOR {result[0].YEAR}: {result[0].EMSSIONS} MIL. METRIC TONS PER YEAR </p>
+                    <p> EMISSION CATEGORY: {result[0].EMISSION_CATEGORY} </p>
+                </>
             }
-
         </>
     )
 
