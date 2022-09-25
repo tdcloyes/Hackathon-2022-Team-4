@@ -28,7 +28,7 @@ function App() {
                 Submit
             </button>
 
-            {
+            {submitted&&
                 <>
                     <p> PRODUCT: {result[0].PRODUCT} </p>
                     <p> COMPANY: {result[0].COMPANY} </p>
